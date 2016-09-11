@@ -17,11 +17,12 @@ data = DataObject()
 
 list_of_test_sets = []
 for set in data.object:
-    read_dict = data.object[set]['cards']
-    set_code = data.object[set]['name']
-    df_result = pd.DataFrame(read_dict)
-    df_result['set'] = set_code
-    list_of_test_sets.append(df_result)
+    if set not in ['Unglued']:
+        read_dict = data.object[set]['cards']
+        set_code = data.object[set]['name']
+        df_result = pd.DataFrame(read_dict)
+        df_result['set'] = set_code
+        list_of_test_sets.append(df_result)
 
 df_all_sets = pd.concat(list_of_test_sets)
 df_all_sets.to_pickle('Allsets_as_pd.pck')

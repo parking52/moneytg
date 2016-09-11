@@ -43,11 +43,25 @@ def process_colors():
 
 
 def process_supertypes():
-    pass
+    df['supertypes'] = df['supertypes'].str.join('-')
+    temp_dict = {
+        'Legendary': True,
+        'Legendary-Snow': True,
+        'Snow': False,
+        'Basic': False,
+        'World': False,
+        'Basic-Snow': False,
+        'Ongoing': False
+    }
+    # df['supertypes'].replace(temp_dict)
+    # df['supertypes'].fillna(False, inplace=True)
+
+    df.supertypes = df.apply(lambda r: True if (str(r['supertypes']) == 'Legendary' or str(r['supertypes']) == 'Legendary-Snow') else False, axis=1)
 
 
 def process_types():
-    pass
+    df['types'] = df['types'].str.join('-')
+    general_replacement_of_enum('types')
 
 
 def process_subtypes():
@@ -105,8 +119,8 @@ def general_replacement_of_enum(name_of_column):
 process_cmc()  # If cmc is nan is mainly because of lands => 0 as well
 process_manaCost()  #
 process_colors()  #
-process_supertypes()  #
-process_types()  #
+process_supertypes()  # Basically Legendary or not
+process_types()  # Done too => mapping
 process_subtypes()  #
 process_rarity()  #
 process_text()  #
@@ -114,8 +128,9 @@ process_power()  #
 process_toughness()  #
 process_loyalty()  #
 process_set()  #
-# process_releaseDate()  # Too much NaN to understand
 process_reserved()  # Reserved Nan => False
+
+# process_releaseDate()  # Too much NaN to understand
 
 df.to_pickle('Allsets_as_pd_cleaned.pck')
 
