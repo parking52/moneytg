@@ -23,6 +23,8 @@ columns = [
 ]
 df = df_all[columns]
 
+map_list_for_processing = {}
+map_list_for_processing_inverse = {}
 
 def process_cmc():
 
@@ -73,7 +75,8 @@ def process_loyalty():
 
 
 def process_set():
-    pass
+
+    general_replacement_of_enum('set')
 
 
 def process_releaseDate():
@@ -87,6 +90,16 @@ def process_releaseDate():
 def process_reserved():
 
     df.fillna(True, inplace=True)
+
+
+def general_replacement_of_enum(name_of_column):
+
+    pd_mapping = pd.Series(df[name_of_column].unique()).to_dict()
+    pd_mapping_inverse = {v: k for k, v in pd_mapping.items()}
+    map_list_for_processing[name_of_column] = pd_mapping
+    map_list_for_processing_inverse[name_of_column] = pd_mapping_inverse
+
+    df[name_of_column].replace(pd_mapping_inverse)
 
 
 process_cmc()  # If cmc is nan is mainly because of lands => 0 as well
