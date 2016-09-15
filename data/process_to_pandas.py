@@ -18,7 +18,7 @@ data = DataObject()
 list_of_test_sets = []
 for set in data.object:
     print(set)
-    if set not in ['Unglued', 'Unhinged']:
+    if str(set) not in ['UGL', 'UNH']:
         read_dict = data.object[set]['cards']
         set_code = data.object[set]['name']
         df_result = pd.DataFrame(read_dict)

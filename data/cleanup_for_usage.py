@@ -1,6 +1,14 @@
 import pandas as pd
 import numpy as np
 
+
+class ProcessedData():
+
+    def __init__(self):
+
+        self.df = None
+
+
 df_all = pd.read_pickle('Allsets_as_pd.pck')
 
 
@@ -21,10 +29,13 @@ columns = [
     'reserved',
     'name'
 ]
+
+inst = ProcessedData()
 df = df_all[columns]
 
 map_list_for_processing = {}
 map_list_for_processing_inverse = {}
+
 
 def process_cmc():
 
@@ -47,7 +58,6 @@ def process_manaCost():
 
 
 def process_colors():
-    # df['colors'].fillna(['None'], inplace=True)
     df['colors'] = df['colors'].str.join('-')
     general_replacement_of_enum('colors')
     pass
@@ -74,14 +84,24 @@ def process_text():
     pass
 
 
-def process_power():
+def process_power(df):
     median_power = 0
     df.power.fillna(median_power, inplace=True)
 
+    df = df[df['power'] != '*']
+    df = df[df['power'] != '1+*']
+    df = df[df['power'] != '2+*']
 
-def process_toughness():
+
+
+def process_toughness(df):
     median_toughness = 0
     df.power.fillna(median_toughness, inplace=True)
+
+    df = df[df['toughness'] != '*']
+    df = df[df['toughness'] != '1+*']
+    df = df[df['toughness'] != '2+*']
+    df = df[df['toughness'] != '7-*']
 
 
 def process_loyalty():
@@ -126,8 +146,8 @@ process_types()  # Done too => mapping
 process_subtypes()  # Too detailed imo, not to be removed
 process_rarity()  #
 process_text()  #
-process_power()  #
-process_toughness()  #
+process_power(df)  #
+process_toughness(df)  #
 process_loyalty()  #
 process_set()  #
 process_reserved()  # Reserved Nan => False
