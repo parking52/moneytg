@@ -35,27 +35,25 @@ def process_cmc():
 
 
 def process_manaCost():
+
+    df.manaCost = df.manaCost.str.replace('}{', '-')
+    df.manaCost = df.manaCost.str.strip('{')
+    df.manaCost = df.manaCost.str.strip('}')
+
+    df.manaCost.fillna(0, inplace=True)
+    general_replacement_of_enum('manaCost')
+
     pass
 
 
 def process_colors():
+    # df['colors'].fillna(['None'], inplace=True)
+    df['colors'] = df['colors'].str.join('-')
+    general_replacement_of_enum('colors')
     pass
-
 
 def process_supertypes():
     df['supertypes'] = df['supertypes'].str.join('-')
-    temp_dict = {
-        'Legendary': True,
-        'Legendary-Snow': True,
-        'Snow': False,
-        'Basic': False,
-        'World': False,
-        'Basic-Snow': False,
-        'Ongoing': False
-    }
-    # df['supertypes'].replace(temp_dict)
-    # df['supertypes'].fillna(False, inplace=True)
-
     df.supertypes = df.apply(lambda r: True if (str(r['supertypes']) == 'Legendary' or str(r['supertypes']) == 'Legendary-Snow') else False, axis=1)
 
 
@@ -65,11 +63,11 @@ def process_types():
 
 
 def process_subtypes():
-    pass
+    df.drop(['subtypes'], 1, inplace=True)
 
 
 def process_rarity():
-    pass
+    general_replacement_of_enum('rarity')
 
 
 def process_text():
@@ -77,15 +75,18 @@ def process_text():
 
 
 def process_power():
-    pass
+    median_power = 0
+    df.power.fillna(median_power, inplace=True)
 
 
 def process_toughness():
-    pass
+    median_toughness = 0
+    df.power.fillna(median_toughness, inplace=True)
 
 
 def process_loyalty():
-    pass
+    median_loyalty = 0
+    df.power.fillna(median_loyalty, inplace=True)
 
 
 def process_set():
@@ -103,7 +104,7 @@ def process_releaseDate():
 
 def process_reserved():
 
-    df.fillna(True, inplace=True)
+    df['reserved'].fillna(False, inplace=True)
 
 
 def general_replacement_of_enum(name_of_column):
@@ -113,7 +114,8 @@ def general_replacement_of_enum(name_of_column):
     map_list_for_processing[name_of_column] = pd_mapping
     map_list_for_processing_inverse[name_of_column] = pd_mapping_inverse
 
-    df[name_of_column].replace(pd_mapping_inverse)
+    df[name_of_column] = df[name_of_column].replace(pd_mapping_inverse)
+    pass
 
 
 process_cmc()  # If cmc is nan is mainly because of lands => 0 as well
@@ -121,7 +123,7 @@ process_manaCost()  #
 process_colors()  #
 process_supertypes()  # Basically Legendary or not
 process_types()  # Done too => mapping
-process_subtypes()  #
+process_subtypes()  # Too detailed imo, not to be removed
 process_rarity()  #
 process_text()  #
 process_power()  #
