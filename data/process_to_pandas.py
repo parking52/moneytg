@@ -23,6 +23,7 @@ for set in data.object:
         set_code = data.object[set]['name']
         df_result = pd.DataFrame(read_dict)
         df_result['set'] = set_code
+        # df_result['releaseDate']
         list_of_test_sets.append(df_result)
 
 df_all_sets = pd.concat(list_of_test_sets)

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import pickle
 
 class ProcessedData():
 
@@ -62,6 +62,7 @@ def process_colors():
     general_replacement_of_enum('colors')
     pass
 
+
 def process_supertypes():
     df['supertypes'] = df['supertypes'].str.join('-')
     df.supertypes = df.apply(lambda r: True if (str(r['supertypes']) == 'Legendary' or str(r['supertypes']) == 'Legendary-Snow') else False, axis=1)
@@ -92,21 +93,26 @@ def process_power(df):
     df = df[df['power'] != '1+*']
     df = df[df['power'] != '2+*']
 
+    df.power.astype('int', inplace=True)
+    return df
 
 
 def process_toughness(df):
     median_toughness = 0
-    df.power.fillna(median_toughness, inplace=True)
+    df.toughness.fillna(median_toughness, inplace=True)
 
     df = df[df['toughness'] != '*']
     df = df[df['toughness'] != '1+*']
     df = df[df['toughness'] != '2+*']
     df = df[df['toughness'] != '7-*']
 
+    df.toughness.astype('int', inplace=True)
+    return df
+
 
 def process_loyalty():
     median_loyalty = 0
-    df.power.fillna(median_loyalty, inplace=True)
+    df.loyalty.fillna(median_loyalty, inplace=True)
 
 
 def process_set():
@@ -146,8 +152,8 @@ process_types()  # Done too => mapping
 process_subtypes()  # Too detailed imo, not to be removed
 process_rarity()  #
 process_text()  #
-process_power(df)  #
-process_toughness(df)  #
+df = process_power(df)  #
+df = process_toughness(df)  #
 process_loyalty()  #
 process_set()  #
 process_reserved()  # Reserved Nan => False
@@ -156,4 +162,26 @@ process_reserved()  # Reserved Nan => False
 
 df.to_pickle('Allsets_as_pd_cleaned.pck')
 
+pickle.dump(map_list_for_processing, open("mapping.pck", "wb"))
+pickle.dump(map_list_for_processing_inverse, open("mapping_inverse.pck", "wb"))
+
+pass
+
+
+text_keywords = "Deathtouch Defender Double Strike Enchant Equip First Strike Flash Flying \
+Haste Hexproof Indestructible Lifelink Menace Prowess Reach Trample Vigilance Absorb Affinity\
+Amplify Annihilator Aura Swap Awaken Banding Battle Cry Bestow Bloodthirst Bushido Buyback \
+Cascade Champion Changeling Cipher Conspire Convoke Cumulative Upkeep Cycling Dash Delve Dethrone\
+Devoid Devour Dredge Echo Entwine Epic Evoke Evolve Exalted Exploit Extort Fading Fear Flanking \
+Flashback Forecast Fortify Frenzy Fuse Graft Gravestorm Haunt Hidden Agenda Hideaway Horsemanship\
+Infect Ingest Intimidate Kicker Landwalk Level Up Living Weapon Madness Miracle Modular Morph Myriad\
+Ninjutsu Offering Outlast Overload Persist Phasing Poisonous Protection Provoke Prowl Rampage\
+Rebound Recover Reinforce Renown Replicate Retrace Ripple Scavenge Skulk Shadow Shroud Soulbond\
+Soulshift Splice Split Second Storm Sunburst Surge Suspend Totem Armor Transfigure Transmute\
+Tribute Undying Unearth Unleash Vanishing Wither Activate Attach Cast Counter Destroy Discard\
+Exchange Exile Fight Play Regenerate Reveal Sacrifice Scry Search Shuffle Tap Untap"
+
+list_keywords = text_keywords.split()
+# for keyword in text_keywords.split():
+#     data['keyword_'+keyword] = [1 if x==keyword else 0 for x in data['text']]
 pass
