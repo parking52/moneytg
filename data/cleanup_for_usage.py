@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 import pickle
+from sklearn import preprocessing
+le = preprocessing.LabelEncoder()
+from sklearn.preprocessing import OneHotEncoder
+enc = OneHotEncoder()
 
 class ProcessedData():
 
@@ -36,6 +40,14 @@ df = df_all[columns]
 map_list_for_processing = {}
 map_list_for_processing_inverse = {}
 
+def hasItem(c,x):
+    if type(x) is not list and np.isnan(x):
+        return False
+    if (c in x):
+        return True
+    else:
+        return False
+
 
 def process_cmc():
 
@@ -58,9 +70,12 @@ def process_manaCost():
 
 
 def process_colors():
+
+    for col in ['White', 'Black', 'Red', 'Green', 'Blue']:
+        df[col.lower()] = [1 if hasItem(col, x) else 0 for x in df['colors']]
+    df['colors'].fillna('None', inplace=True)
     df['colors'] = df['colors'].str.join('-')
     general_replacement_of_enum('colors')
-    pass
 
 
 def process_supertypes():
@@ -78,7 +93,16 @@ def process_subtypes():
 
 
 def process_rarity():
-    general_replacement_of_enum('rarity')
+    # general_replacement_of_enum('rarity')
+    rarity_dict = {
+        'Basic Land': 0,
+        'Common': 1,
+        'Uncommon': 2,
+        'Special': 3,
+        'Rare': 4,
+        'Mythic Rare': 5
+    }
+    df.rarity = df.rarity.replace(rarity_dict)
 
 
 def process_text():
@@ -142,7 +166,6 @@ def general_replacement_of_enum(name_of_column):
 
     df[name_of_column] = df[name_of_column].replace(pd_mapping_inverse)
     pass
-
 
 process_cmc()  # If cmc is nan is mainly because of lands => 0 as well
 process_manaCost()  #
