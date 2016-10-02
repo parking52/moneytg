@@ -29,7 +29,7 @@ columns = [
     'toughness',
     'loyalty',
     'set',
-    #'releaseDate',
+    'releaseDate',
     'reserved',
     'name'
 ]
@@ -146,11 +146,8 @@ def process_set():
 
 def process_releaseDate():
 
-    def fill_releaseDate(row):
-        return '1999'
-
-    df.releaseDate = df.apply(lambda r: fill_releaseDate(r) if str(r['releaseDate']) == 'nan' else r['releaseDate'].split('-')[0], axis=1)
-
+    df['releaseDate'].fillna('1999', inplace=True)
+    df['releaseDate'] = df.releaseDate.str.split('-').str[0]
 
 def process_reserved():
 
@@ -167,6 +164,7 @@ def general_replacement_of_enum(name_of_column):
     df[name_of_column] = df[name_of_column].replace(pd_mapping_inverse)
     pass
 
+process_releaseDate()
 process_cmc()  # If cmc is nan is mainly because of lands => 0 as well
 process_manaCost()  #
 process_colors()  #
