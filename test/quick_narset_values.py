@@ -27,16 +27,20 @@ def function(n_spells, iterations, size_sample, file_name):
 
     print("proba d'avoir au moins une carte")
     print(array_n_spells)
+    if file_name is None:
+        return array_n_spells
+    else:
+        p = figure(title=file_name)
+        p.line(range(len(array_n_spells)), array_n_spells, line_color="black")
+        output_file(file_name, title=file_name)
+        show(p)
 
-    p = figure(title=file_name)
-    p.line(range(len(array_n_spells)), array_n_spells, line_color="black")
-    output_file(file_name, title=file_name)
-    show(p)
 
 
 
+print("running smtg")
 #check narset n_spell
-function(n_spells=30, iterations=100000, size_sample=4, file_name='narset')
+# function(n_spells=30, iterations=100000, size_sample=4, file_name='narset')
 # [ 0.       0.04113  0.07989  0.12062  0.15422  0.18925  0.22481  0.25788
 #   0.28892  0.32299  0.35324  0.3786   0.40905  0.43423  0.46036  0.48594
 #   0.51063  0.53645  0.55616  0.5767   0.60017  0.61991  0.64283  0.65695
@@ -45,14 +49,14 @@ function(n_spells=30, iterations=100000, size_sample=4, file_name='narset')
 
 
 #check caillou dans main de depart
-function(n_spells=20, iterations=100000, size_sample=7, file_name='narset_cailloux')
+# function(n_spells=20, iterations=100000, size_sample=7, file_name='narset_cailloux')
 # [ 0.       0.07096  0.13715  0.20056  0.25895  0.31162  0.36465  0.41333
 #   0.46108  0.49415  0.53712  0.57313  0.60645  0.6393   0.66814  0.69597
 #   0.72368  0.74262  0.76756  0.78721]
 # 10 to have at least 1 caillou
 
 #check sidisi pour proba 3
-function(n_spells=50, iterations=100000, size_sample=3, file_name='sidisi')
+# function(n_spells=50, iterations=100000, size_sample=3, file_name='sidisi')
 # [ 0.       0.02976  0.06087  0.0889   0.11829  0.14699  0.17238  0.20033
 #   0.22677  0.25345  0.27461  0.29944  0.32477  0.34413  0.37147  0.39174
 #   0.41442  0.43518  0.45533  0.47829  0.49256  0.51238  0.53593  0.55055
@@ -63,3 +67,4 @@ function(n_spells=50, iterations=100000, size_sample=3, file_name='sidisi')
 #  looks like 21
 #  current status: 40 => 79%
 #  fatass: 10 =>25%
+
