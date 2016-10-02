@@ -22,7 +22,7 @@ def function(n_spells, iterations, size_sample, file_name):
             value_in_sample = sum(deck[:size_sample])
             result_array[value_in_sample] += 1
 
-        value_for_n = 1 - (result_array[0])/iterations
+        value_for_n = (sum(result_array[2:3]))/iterations
         array_n_spells[n_spells] = value_for_n
 
     print("proba d'avoir au moins une carte")
@@ -68,3 +68,10 @@ print("running smtg")
 #  current status: 40 => 79%
 #  fatass: 10 =>25%
 
+
+#check lands dans main de depart 0 => 2:4
+# function(n_spells=100, iterations=100000, size_sample=7, file_name='lands_overview.html')
+# [ 0.       0.07096  0.13715  0.20056  0.25895  0.31162  0.36465  0.41333
+#   0.46108  0.49415  0.53712  0.57313  0.60645  0.6393   0.66814  0.69597
+#   0.72368  0.74262  0.76756  0.78721]
+# 10 to have at least 1 caillou
